@@ -30,13 +30,22 @@ export const metadata: Metadata = {
     siteName: BUSINESS.name,
     title: SEO_TITLE,
     description: SEO_DESCRIPTION,
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Autoaufbereitung in Frauenfeld, jj.detailing01" }],
+    images: [
+      {
+        // ?v= erhöhen, wenn das Bild neu erzeugt wird, damit Messenger den Cache erneuern
+        url: "/og.jpg?v=2",
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "jj.detailing01: Autoaufbereitung in Frauenfeld. Schwarzes Auto unter Waben-Licht, Pakete ab CHF 89.",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: SEO_TITLE,
     description: SEO_DESCRIPTION,
-    images: ["/og.jpg"],
+    images: ["/og.jpg?v=2"],
   },
   robots: {
     index: true,

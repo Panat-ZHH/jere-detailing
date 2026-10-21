@@ -68,15 +68,13 @@ export function Footer({ settings }: { settings: Settings }) {
       >
         jj.detailing
       </p>
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 pb-10 pt-8 text-xs text-zinc-500 md:flex-row md:justify-between">
-        <p>© {new Date().getFullYear()} jj.detailing01, Frauenfeld</p>
-        <p>
-          3D-Modell: „Car Concept“, Khronos Group, nach einem Modell von Unity Fan,{" "}
-          <a href="https://creativecommons.org/licenses/by/4.0/" className="underline underline-offset-2" target="_blank" rel="noreferrer">
-            CC BY 4.0
-          </a>
-          , Lack eingefärbt
-        </p>
+      <div className="mx-auto max-w-6xl px-5 pb-10 pt-8">
+        <div className="flex flex-col gap-2 border-t border-line pt-6 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} jj.detailing01, Frauenfeld</p>
+          <p>
+            Designed &amp; powered by <span className="font-display font-semibold tracking-tight text-fg">Wendico</span>
+          </p>
+        </div>
       </div>
     </footer>
   );

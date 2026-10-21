@@ -28,9 +28,27 @@ export default async function Impressum() {
       <p>Instagram: {s.instagram}</p>
       <h2>Bildnachweis</h2>
       <p>
-        3D-Modell „Car Concept“ der Khronos Group, basierend auf einem Public-Domain-Modell von Unity Fan, lizenziert
-        unter CC BY 4.0. Die Lackfarbe wurde angepasst.
+        3D-Modell in der 3D-Ansicht:{" "}
+        <a
+          href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept"
+          target="_blank"
+          rel="noreferrer"
+          className="text-fg underline underline-offset-2"
+        >
+          „Car Concept“
+        </a>{" "}
+        der Khronos Group, basierend auf einem Public-Domain-Modell von Unity Fan. Lizenz:{" "}
+        <a
+          href="https://creativecommons.org/licenses/by/4.0/deed.de"
+          target="_blank"
+          rel="noreferrer"
+          className="text-fg underline underline-offset-2"
+        >
+          CC BY 4.0
+        </a>
+        . Änderungen: Lackfarbe und Materialien angepasst, Kennzeichen und Emblem ausgeblendet, Datei komprimiert.
       </p>
+      <p>Die übrigen Fotos auf dieser Website sind Symbolbilder.</p>
     </LegalPage>
   );
 }

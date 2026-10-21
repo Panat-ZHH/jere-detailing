@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "og": "env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY node scripts/render-og.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -25,6 +26,7 @@
     "three": "^0.186.1"
   },
   "devDependencies": {
+    "@fontsource/outfit": "^5.3.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
