@@ -10,6 +10,7 @@ import { RequestSection } from "@/components/RequestSection";
 import { Faq } from "@/components/Faq";
 import { CtaBand } from "@/components/CtaBand";
 import { Footer } from "@/components/Footer";
+import { InteractiveBackground } from "@/components/InteractiveBackground";
 import { getServices, getSettings } from "@/lib/data";
 
 // Preise und Einstellungen kommen aus Supabase. Der Admin aktualisiert die Seite beim Speichern sofort.
@@ -39,6 +40,7 @@ export default async function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <InteractiveBackground />
       <Nav />
       <main>
         <Hero />

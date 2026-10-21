@@ -21,18 +21,19 @@ export function Hero() {
           DETAILING
         </p>
 
-        <div className="absolute inset-y-0 right-0 -z-20 w-full md:w-[72%]">
+        {/* Foto blendet per Maske weich in den Seitenhintergrund aus, keine harten Kanten */}
+        <div className="hero-photo absolute inset-y-0 right-0 -z-20 w-full md:w-[74%]">
           <Image
             src="/images/hero.png"
             alt="Schwarzes Auto mit frisch poliertem Lack in einer dunklen Werkstatt"
             fill
             priority
-            sizes="(min-width: 768px) 72vw, 100vw"
+            sizes="(min-width: 768px) 74vw, 100vw"
             className="object-cover object-[65%_center]"
           />
+          {/* Mobil liegt der Text auf dem Foto, daher dort zusätzlich abdunkeln */}
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/50 to-transparent md:hidden" />
         </div>
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/70 to-ink/10 md:bg-gradient-to-r md:from-ink md:from-[28%] md:via-ink/40 md:via-[48%] md:to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 -z-10 h-56 bg-gradient-to-t from-ink to-transparent" />
 
         <div className="mx-auto w-full max-w-6xl px-5 pb-36 pt-32 md:pb-24 md:pt-24">
           <Reveal className="max-w-lg">

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { ArrowsHorizontal, CubeFocus } from "@phosphor-icons/react";
-import type { Hotspot } from "./three/CarScene";
+import type { Finish, Hotspot } from "./three/CarScene";
 
 const CarScene = dynamic(() => import("./three/CarScene"), { ssr: false });
 
@@ -67,14 +67,22 @@ export function CarShowcase() {
   const reduce = useReducedMotion();
   const wrap = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [inView, setInView] = useState(false);
   const [active, setActive] = useState<string | null>("lack");
   const [interacted, setInteracted] = useState(false);
+  const [finish, setFinish] = useState<Finish>("nachher");
 
-  // Erst laden, wenn die Sektion in die Nähe des Viewports kommt
+  // Erst laden, wenn die Sektion in die Nähe kommt, und nur rendern, solange sie sichtbar ist
   useEffect(() => {
     const el = wrap.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && setVisible(true), { rootMargin: "300px" });
+    const io = new IntersectionObserver(
+      ([e]) => {
+        setInView(e.isIntersecting);
+        if (e.isIntersecting) setVisible(true);
+      },
+      { rootMargin: "200px" },
+    );
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -88,22 +96,48 @@ export function CarShowcase() {
           Wo wir ansetzen.
         </h2>
         <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
-          Dreh das Auto und tipp auf einen Punkt. So siehst du, was bei jedem Bereich passiert.
+          Dreh das Auto, tipp auf einen Punkt oder schalte zwischen Vorher und Nachher um.
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-12">
           <div
             ref={wrap}
-            className="relative h-[420px] overflow-hidden rounded-[var(--radius-card)] border border-line bg-ink-2 md:h-[560px] lg:col-span-8"
+            className="relative h-[440px] overflow-hidden rounded-[var(--radius-card)] border border-line bg-[#0a0a0c] md:h-[600px] lg:col-span-8"
             onPointerDown={() => setInteracted(true)}
           >
             {visible ? (
-              <CarScene hotspots={spots} active={active} onSelect={setActive} autoRotate={!reduce && !interacted} />
+              <CarScene
+                hotspots={spots}
+                active={active}
+                onSelect={setActive}
+                autoRotate={!reduce && !interacted}
+                finish={finish}
+                running={inView}
+                reduceMotion={!!reduce}
+              />
             ) : (
               <div className="grid h-full place-items-center text-muted">
                 <CubeFocus size={40} weight="thin" />
               </div>
             )}
+
+            {/* Lackzustand umschalten: zeigt, was Politur und Versiegelung bewirken */}
+            <div className="glass absolute left-4 top-4 grid grid-cols-2 gap-1 rounded-full p-1" role="radiogroup" aria-label="Lackzustand">
+              {(["vorher", "nachher"] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  role="radio"
+                  aria-checked={finish === f}
+                  onClick={() => setFinish(f)}
+                  className={`rounded-full px-4 py-1.5 text-xs font-medium capitalize transition ${
+                    finish === f ? "bg-accent text-white" : "text-muted hover:text-fg"
+                  }`}
+                >
+                  {f === "vorher" ? "Vorher" : "Nachher"}
+                </button>
+              ))}
+            </div>
 
             <div className="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center">
               <span className="glass flex items-center gap-2 rounded-full px-4 py-2 text-xs text-muted">
