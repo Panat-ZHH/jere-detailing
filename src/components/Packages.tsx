@@ -14,6 +14,7 @@ import {
   type VehicleSize,
 } from "@/lib/booking";
 import { SELECT_SERVICE_EVENT } from "./SelectServiceLink";
+import { EdgeTool } from "./motion/EdgeTool";
 
 const filters: { id: Category | "alle"; label: string }[] = [
   { id: "alle", label: "Alle" },
@@ -44,6 +45,7 @@ export function Packages({ services, settings }: { services: Service[]; settings
 
   return (
     <section id="pakete" className="relative overflow-x-clip py-24 md:py-32">
+      <EdgeTool src="/images/tools/pads.webp" side="right" top="4%" width={280} rotate={18} speed={1.2} />
       <div className="pointer-events-none absolute right-[8%] top-1/4 -z-10 size-[420px] rounded-full bg-accent/12 blur-[130px]" />
 
       <div className="mx-auto max-w-6xl px-5">
@@ -62,7 +64,7 @@ export function Packages({ services, settings }: { services: Service[]; settings
               role="tab"
               aria-selected={filter === f.id}
               onClick={() => setFilter(f.id)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition active:scale-[0.98] ${
+              className={`min-h-10 rounded-full px-4 py-2 text-sm font-medium transition active:scale-[0.98] ${
                 filter === f.id ? "bg-accent text-white" : "border border-line text-muted hover:text-fg"
               }`}
             >
@@ -167,7 +169,7 @@ export function Packages({ services, settings }: { services: Service[]; settings
                         role="radio"
                         aria-checked={size === v.id}
                         onClick={() => setSize(v.id)}
-                        className={`rounded-full py-2 text-sm transition ${
+                        className={`min-h-10 rounded-full py-2 text-sm transition ${
                           size === v.id ? "bg-white/10 text-fg" : "text-muted hover:text-fg"
                         }`}
                       >

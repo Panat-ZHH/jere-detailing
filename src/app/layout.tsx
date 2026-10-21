@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Outfit } from "next/font/google";
 import "./globals.css";
+import { BUSINESS, SEO_DESCRIPTION, SEO_TITLE, SITE_URL } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,17 +15,41 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "jj.detailing01 | Autoaufbereitung in Frauenfeld",
-  description:
-    "Autoaufbereitung von Hand in Frauenfeld TG: Handwäsche, Innenraum, Politur und Keramikversiegelung. Jetzt online anfragen bei Jeremia von jj.detailing01.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: SEO_TITLE, template: "%s | jj.detailing01" },
+  description: SEO_DESCRIPTION,
+  applicationName: BUSINESS.name,
+  authors: [{ name: BUSINESS.owner }],
+  creator: BUSINESS.owner,
+  category: "Autoaufbereitung",
+  alternates: { canonical: "/", languages: { "de-CH": "/" } },
   openGraph: {
-    title: "jj.detailing01 | Professional Auto Care",
-    description: "Autoaufbereitung von Hand in Frauenfeld. Online anfragen.",
-    images: ["/images/hero.png"],
-    locale: "de_CH",
     type: "website",
+    locale: "de_CH",
+    url: "/",
+    siteName: BUSINESS.name,
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Autoaufbereitung in Frauenfeld, jj.detailing01" }],
   },
-  icons: { icon: "/logo.webp" },
+  twitter: {
+    card: "summary_large_image",
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    images: ["/og.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  // Lokale Geo-Signale (Frauenfeld, Thurgau)
+  other: {
+    "geo.region": `${BUSINESS.country}-${BUSINESS.regionCode}`,
+    "geo.placename": BUSINESS.city,
+    "geo.position": `${BUSINESS.lat};${BUSINESS.lng}`,
+    ICBM: `${BUSINESS.lat}, ${BUSINESS.lng}`,
+  },
 };
 
 export const viewport: Viewport = {

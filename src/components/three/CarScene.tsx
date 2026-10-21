@@ -140,7 +140,7 @@ function CameraIntro({ enabled }: { enabled: boolean }) {
   const camera = useThree((s) => s.camera);
   const aspect = useThree((s) => s.size.width / s.size.height);
   const end = useMemo(() => {
-    const factor = aspect < 0.9 ? 1.45 : aspect < 1.3 ? 1.2 : 1;
+    const factor = aspect < 0.9 ? 1.45 : aspect < 1.3 ? 1.2 : aspect > 1.8 ? 0.84 : 1;
     return CAM_END.clone().multiplyScalar(factor);
   }, [aspect]);
   useLayoutEffect(() => {
@@ -152,6 +152,20 @@ function CameraIntro({ enabled }: { enabled: boolean }) {
     camera.position.lerp(end, 1 - Math.exp(-delta * 1.6));
     if (camera.position.distanceTo(end) < 0.02) done.current = true;
   });
+  return null;
+}
+
+// Auf breiten Bühnen liegt rechts das Info-Panel. Das Bild wird darum nach links verschoben,
+// ohne das Auto im Raum zu verschieben (Drehpunkt bleibt die Automitte).
+function ViewShift() {
+  const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
+  const size = useThree((s) => s.size);
+  useLayoutEffect(() => {
+    const px = size.width >= 1180 ? 190 : 0; // Panel schwebt erst ab xl (1280px Fenster) über der Bühne
+    if (px > 0) camera.setViewOffset(size.width + 2 * px, size.height, 2 * px, 0, size.width, size.height);
+    else camera.clearViewOffset();
+    camera.updateProjectionMatrix();
+  }, [camera, size]);
   return null;
 }
 
@@ -226,6 +240,7 @@ export default function CarScene({
         dpr={[1, 2]}
         gl={{ antialias: false, powerPreference: "high-performance" }}
       >
+        <ViewShift />
         <color attach="background" args={["#0a0a0c"]} />
         <fog attach="fog" args={["#0a0a0c", 9, 20]} />
 
@@ -310,7 +325,7 @@ export default function CarScene({
             aria-label={h.label}
             aria-pressed={active === h.id}
             style={{ opacity: 0 }}
-            className={`group absolute left-0 top-0 grid size-8 place-items-center rounded-full border backdrop-blur-md transition-[opacity,background-color,border-color] duration-300 ${
+            className={`group absolute left-0 top-0 grid size-10 place-items-center rounded-full border backdrop-blur-md transition-[opacity,background-color,border-color] duration-300 ${
               active === h.id ? "border-accent bg-accent/90 text-white" : "border-white/25 bg-black/35 text-white hover:border-white/60"
             }`}
           >

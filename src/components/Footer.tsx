@@ -19,7 +19,7 @@ export function Footer({ settings }: { settings: Settings }) {
 
         <div className="text-[15px] text-muted">
           <p className="mb-3 text-sm font-medium text-fg">Kontakt</p>
-          <ul className="grid gap-1.5">
+          <ul className="grid">
             <li>Jeremia</li>
             <li>{settings.address}</li>
             {settings.phone && (
@@ -37,7 +37,7 @@ export function Footer({ settings }: { settings: Settings }) {
               </li>
             )}
             <li>
-              <a href={settings.instagram} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-fg">
+              <a href={settings.instagram} target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-2 hover:text-fg">
                 <InstagramLogo size={18} />
                 {handle}
               </a>
@@ -47,21 +47,28 @@ export function Footer({ settings }: { settings: Settings }) {
 
         <div className="text-[15px] text-muted md:text-right">
           <p className="mb-3 text-sm font-medium text-fg">Rechtliches</p>
-          <ul className="grid gap-1.5">
+          <ul className="grid">
             <li>
-              <a href="/impressum" className="hover:text-fg">
+              <a href="/impressum" className="inline-flex min-h-10 items-center hover:text-fg">
                 Impressum
               </a>
             </li>
             <li>
-              <a href="/datenschutz" className="hover:text-fg">
+              <a href="/datenschutz" className="inline-flex min-h-10 items-center hover:text-fg">
                 Datenschutz
               </a>
             </li>
           </ul>
         </div>
       </div>
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 pb-10 text-xs text-zinc-500 md:flex-row md:justify-between">
+      {/* Riesige Wortmarke als Abschluss */}
+      <p
+        aria-hidden
+        className="select-none overflow-x-clip whitespace-nowrap pb-[0.06em] text-center font-display text-[20vw] font-bold leading-[1.05] tracking-tighter text-white/[0.05]"
+      >
+        jj.detailing
+      </p>
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 pb-10 pt-8 text-xs text-zinc-500 md:flex-row md:justify-between">
         <p>© {new Date().getFullYear()} jj.detailing01, Frauenfeld</p>
         <p>
           3D-Modell: „Car Concept“, Khronos Group, nach einem Modell von Unity Fan,{" "}

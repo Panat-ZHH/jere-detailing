@@ -1,10 +1,12 @@
 import { RequestForm } from "./RequestForm";
 import { Reveal } from "./Reveal";
 import type { Service, Settings } from "@/lib/booking";
+import { EdgeTool } from "./motion/EdgeTool";
 
 export function RequestSection({ services, settings }: { services: Service[]; settings: Settings }) {
   return (
     <section id="anfrage" className="relative overflow-x-clip py-24 md:py-32">
+      <EdgeTool src="/images/tools/brush.webp" side="left" top="30%" width={240} rotate={-22} />
       <div className="pointer-events-none absolute right-[5%] top-24 -z-10 size-[480px] rounded-full bg-accent/10 blur-[140px]" />
 
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-5 lg:grid-cols-12 lg:gap-10">

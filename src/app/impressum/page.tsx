@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
 import { getSettings } from "@/lib/data";
 
-export const metadata: Metadata = { title: "Impressum | jj.detailing01" };
+export const metadata: Metadata = {
+  title: "Impressum",
+  description: "Impressum von jj.detailing01, Autoaufbereitung in Frauenfeld.",
+  alternates: { canonical: "/impressum" },
+};
 export const revalidate = 3600;
 
 // TODO: Nachname, vollständige Adresse und ggf. UID-Nummer ergänzen (im Admin unter Einstellungen).

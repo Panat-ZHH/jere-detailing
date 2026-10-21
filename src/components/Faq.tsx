@@ -1,40 +1,13 @@
 import { Plus } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
+import { EdgeTool } from "./motion/EdgeTool";
+import type { Faq as FaqItem } from "@/lib/faq";
 
-const faqs = [
-  {
-    q: "Wie lange brauche ich ohne Auto?",
-    a: "Aussen- und Innenpflege dauern ein paar Stunden. Die Komplettaufbereitung braucht einen Tag, Politur mit Keramik zwei Tage, weil die Versiegelung aushärten muss.",
-  },
-  {
-    q: "Was ist der Unterschied zwischen Wachs und Keramik?",
-    a: "Wachs gibt schönen Glanz und hält einige Wochen bis Monate. Eine Keramikversiegelung bildet eine harte Schutzschicht, die deutlich länger hält und die Pflege danach viel einfacher macht.",
-  },
-  {
-    q: "Kann jeder Kratzer wegpoliert werden?",
-    a: "Feine Kratzer und Waschstrassen-Swirls ja. Tiefe Kratzer, bei denen man den Fingernagel spürt, gehen meist bis in die Grundierung. Das schauen wir uns vor Ort an und sagen dir ehrlich, was möglich ist.",
-  },
-  {
-    q: "Muss ich das Auto vorher ausräumen?",
-    a: "Am besten ja, vor allem für die Innenraumpflege. Persönliche Sachen legen wir sonst in eine Box und geben sie dir bei der Abholung zurück.",
-  },
-  {
-    q: "Ist mein Termin nach der Anfrage fix?",
-    a: "Noch nicht. Jeremia prüft jede Anfrage und meldet sich bei dir, um den Termin zu bestätigen oder eine andere Zeit vorzuschlagen.",
-  },
-  {
-    q: "Wo ist jj.detailing01?",
-    a: "In Frauenfeld im Thurgau. Die genaue Adresse bekommst du mit der Terminbestätigung.",
-  },
-  {
-    q: "Kann ich einen Termin verschieben?",
-    a: "Klar. Melde dich bis 24 Stunden vorher, dann finden wir einen neuen Termin.",
-  },
-];
-
-export function Faq() {
+export function Faq({ faqs }: { faqs: FaqItem[] }) {
   return (
-    <section id="faq" className="mx-auto max-w-3xl px-5 py-24 md:py-32">
+    <section id="faq" className="relative overflow-x-clip">
+      <EdgeTool src="/images/tools/mitt.webp" side="right" top="20%" width={300} rotate={-10} speed={0.9} />
+      <div className="mx-auto max-w-3xl px-5 py-24 md:py-32">
       <Reveal>
         <h2 className="font-display text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
           Häufige Fragen
@@ -53,6 +26,7 @@ export function Faq() {
             <p className="max-w-[62ch] pb-6 leading-relaxed text-muted">{f.a}</p>
           </details>
         ))}
+      </div>
       </div>
     </section>
   );

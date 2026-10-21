@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
 
-export const metadata: Metadata = { title: "Datenschutz | jj.detailing01" };
+export const metadata: Metadata = {
+  title: "Datenschutz",
+  description: "Datenschutzerklärung von jj.detailing01 für Terminanfragen.",
+  alternates: { canonical: "/datenschutz" },
+};
 
 // TODO: Vor dem Livegang vollständige Datenschutzerklärung (revDSG) ergänzen.
 export default function Datenschutz() {

@@ -115,6 +115,7 @@ export async function saveService(_: ActionState, form: FormData): Promise<Actio
   if (row.featured) await supabase.from("services").update({ featured: false }).neq("id", id);
 
   revalidatePath("/");
+  revalidatePath("/llms.txt");
   revalidatePath("/admin/dashboard");
   return { ok: true, message: isNew ? "Paket angelegt." : "Gespeichert. Die Website ist aktualisiert." };
 }
@@ -157,6 +158,7 @@ export async function saveSettings(_: ActionState, form: FormData): Promise<Acti
     return { error: "Speichern fehlgeschlagen." };
   }
   revalidatePath("/", "layout");
+  revalidatePath("/llms.txt");
   return { ok: true, message: "Einstellungen gespeichert." };
 }
 

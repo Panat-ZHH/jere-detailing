@@ -196,7 +196,7 @@ export function RequestForm({ services, settings }: { services: Service[]; setti
 
       <fieldset className="mt-7">
         <legend className="text-sm font-medium text-fg">Wunschtag</legend>
-        <div className="-mx-1 mt-3 flex snap-x gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:thin]">
+        <div data-lenis-prevent className="-mx-1 mt-3 flex snap-x gap-2 overflow-x-auto px-1 pb-2 [mask-image:linear-gradient(to_right,#000_82%,transparent)] [scrollbar-width:thin]">
           {dates.length === 0
             ? Array.from({ length: 7 }).map((_, i) => (
                 <div key={i} className="h-[68px] w-[64px] shrink-0 animate-pulse rounded-2xl bg-white/[0.05]" />

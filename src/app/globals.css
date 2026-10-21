@@ -29,6 +29,8 @@ html {
 /* Nur html trägt die Grundfarbe, damit der fixierte Hintergrund (-z-10) sichtbar bleibt */
 body {
   color: var(--color-fg);
+  /* Werkzeuge am Rand ragen absichtlich aus dem Bild: nicht seitlich scrollbar machen */
+  overflow-x: clip;
 }
 
 /* Fieldsets haben sonst min-width: min-content und sprengen scrollbare Zeilen */
@@ -66,91 +68,6 @@ fieldset {
   }
 }
 
-/* ------------------------------------------------------------------ Interaktiver Hintergrund */
-.interactive-bg {
-  --mx: 70vw;
-  --my: 30vh;
-  --spot: 1;
-}
-.bg-blobs {
-  position: absolute;
-  inset: -10vh -10vw;
-}
-.bg-blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  will-change: transform;
-  animation: bg-drift 26s ease-in-out infinite alternate;
-}
-.bg-blob-a {
-  width: 55vmax;
-  height: 55vmax;
-  top: -18vmax;
-  left: -14vmax;
-  background: radial-gradient(circle, rgb(224 53 59 / 0.17), transparent 65%);
-}
-.bg-blob-b {
-  width: 52vmax;
-  height: 52vmax;
-  bottom: -22vmax;
-  right: -16vmax;
-  background: radial-gradient(circle, rgb(130 140 165 / 0.11), transparent 65%);
-  animation-duration: 32s;
-  animation-direction: alternate-reverse;
-}
-.bg-blob-c {
-  width: 38vmax;
-  height: 38vmax;
-  top: 38%;
-  left: 52%;
-  background: radial-gradient(circle, rgb(150 18 24 / 0.14), transparent 65%);
-  animation-duration: 38s;
-}
-@keyframes bg-drift {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(6vw, 4vh, 0) scale(1.12);
-  }
-  100% {
-    transform: translate3d(-4vw, 8vh, 0) scale(0.95);
-  }
-}
-/* Beim Scrollen wandern die Lichtflächen nach oben (Chrome/Edge/Safari 26+) */
-@supports (animation-timeline: scroll()) {
-  .bg-blobs {
-    animation: bg-scroll linear both;
-    animation-timeline: scroll(root);
-  }
-  @keyframes bg-scroll {
-    to {
-      transform: translate3d(0, -18vh, 0) rotate(8deg);
-    }
-  }
-}
-
-.bg-dots {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgb(255 255 255 / 0.075) 1px, transparent 1.4px);
-  background-size: 26px 26px;
-}
-/* Helleres Raster nur im Lichtkegel um den Mauszeiger */
-.bg-dots-lit {
-  background-image: radial-gradient(rgb(255 255 255 / 0.7) 1.1px, transparent 1.6px);
-  opacity: var(--spot);
-  -webkit-mask-image: radial-gradient(260px circle at var(--mx) var(--my), #000 0%, transparent 75%);
-  mask-image: radial-gradient(260px circle at var(--mx) var(--my), #000 0%, transparent 75%);
-}
-.bg-spot {
-  position: absolute;
-  inset: 0;
-  opacity: var(--spot);
-  background: radial-gradient(560px circle at var(--mx) var(--my), rgb(224 53 59 / 0.13), transparent 62%);
-}
-
 .hero-photo {
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 98%);
   mask-image: linear-gradient(to bottom, #000 55%, transparent 98%);
@@ -168,10 +85,72 @@ fieldset {
   }
 }
 
+/* ------------------------------------------------------------------ Poliermaschinen-Cursor */
+html.polisher-cursor,
+html.polisher-cursor * {
+  cursor: none !important;
+}
+html.polisher-cursor :is(input:not([type="range"]):not([type="checkbox"]):not([type="radio"]), textarea, select) {
+  cursor: text !important;
+}
+.polisher {
+  opacity: 0;
+  transition: opacity 0.2s;
+  will-change: transform;
+}
+.polisher[data-visible="true"] {
+  opacity: 1;
+}
+.polisher[data-hidden="true"] {
+  opacity: 0;
+}
+.polisher-img {
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.55));
+  transform-origin: 28% 83%;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.polisher[data-hover="true"] .polisher-img {
+  transform: scale(1.18);
+}
+/* Klick = Maschine läuft: kurzes Vibrieren */
+.polisher[data-active="true"] .polisher-img {
+  animation: polisher-buzz 0.08s linear infinite;
+}
+@keyframes polisher-buzz {
+  0% {
+    transform: translate(0.6px, -0.4px) scale(0.94);
+  }
+  50% {
+    transform: translate(-0.6px, 0.5px) scale(0.94);
+  }
+  100% {
+    transform: translate(0.4px, 0.6px) scale(0.94);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .bg-blob,
-  .bg-blobs {
+  .polisher[data-active="true"] .polisher-img {
     animation: none;
+    transform: scale(0.94);
+  }
+}
+
+/* SplitText-Zeilenmasken: Platz für Ober- und Unterlängen (g, j, p, Umlaute) */
+.split-line-mask {
+  padding-block: 0.16em;
+  margin-block: -0.16em;
+}
+
+/* Ablauf-Sektion: Icon und Text des aktiven Schritts */
+@keyframes ps-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+@keyframes ps-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
 }
 

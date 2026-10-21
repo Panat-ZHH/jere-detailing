@@ -99,10 +99,13 @@ export function CarShowcase() {
           Dreh das Auto, tipp auf einen Punkt oder schalte zwischen Vorher und Nachher um.
         </p>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-12">
+      </div>
+
+      {/* Bühne über die volle Breite, Info-Panel schwebt auf Desktop darüber */}
+      <div className="relative mx-3 mt-10 md:mx-6">
           <div
             ref={wrap}
-            className="relative h-[440px] overflow-hidden rounded-[var(--radius-card)] border border-line bg-[#0a0a0c] md:h-[600px] lg:col-span-8"
+            className="relative h-[460px] overflow-hidden rounded-[28px] border border-line bg-[#0a0a0c] md:h-[78vh] md:min-h-[560px]"
             onPointerDown={() => setInteracted(true)}
           >
             {visible ? (
@@ -130,7 +133,7 @@ export function CarShowcase() {
                   role="radio"
                   aria-checked={finish === f}
                   onClick={() => setFinish(f)}
-                  className={`rounded-full px-4 py-1.5 text-xs font-medium capitalize transition ${
+                  className={`min-h-10 rounded-full px-4 py-2 text-xs font-medium capitalize transition ${
                     finish === f ? "bg-accent text-white" : "text-muted hover:text-fg"
                   }`}
                 >
@@ -147,8 +150,8 @@ export function CarShowcase() {
             </div>
           </div>
 
-          <aside className="glass flex flex-col overflow-hidden rounded-[var(--radius-card)] lg:col-span-4">
-            <div className="relative aspect-[4/3] w-full">
+          <aside className="glass mt-4 flex flex-col overflow-hidden rounded-[var(--radius-card)] xl:absolute xl:bottom-6 xl:right-6 xl:top-6 xl:mt-0 xl:w-[360px]">
+            <div className="relative aspect-[16/10] w-full shrink-0">
               <Image key={spot.image} src={spot.image} alt="" fill sizes="(min-width: 1024px) 380px, 100vw" className="object-cover" />
             </div>
             <div className="flex flex-1 flex-col p-6">
@@ -160,7 +163,7 @@ export function CarShowcase() {
                     role="tab"
                     aria-selected={s.id === spot.id}
                     onClick={() => setActive(s.id)}
-                    className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                    className={`min-h-10 rounded-full border px-3.5 py-2 text-xs transition ${
                       s.id === spot.id ? "border-accent bg-accent/15 text-fg" : "border-line text-muted hover:text-fg"
                     }`}
                   >
@@ -173,7 +176,6 @@ export function CarShowcase() {
               <p className="mt-auto pt-6 text-sm text-fg">{spot.detail}</p>
             </div>
           </aside>
-        </div>
       </div>
     </section>
   );
