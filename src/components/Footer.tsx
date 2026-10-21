@@ -72,7 +72,7 @@ export function Footer({ settings }: { settings: Settings }) {
         <div className="flex flex-col gap-2 border-t border-line pt-6 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} jj.detailing01, Frauenfeld</p>
           <p>
-            Designed &amp; powered by <span className="font-display font-semibold tracking-tight text-fg">Wendico</span>
+            Designed &amp; powered by <span className="font-display font-semibold tracking-tight text-fg"><a href="https://wendico.ch" target="blank">Wendico</a></span>
           </p>
         </div>
       </div>
