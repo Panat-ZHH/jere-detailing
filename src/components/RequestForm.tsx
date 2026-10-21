@@ -3,30 +3,24 @@
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type FormEvent } from "react";
 import { CheckCircle, WarningCircle } from "@phosphor-icons/react";
 import {
-  bookableDates,
   estimatePrice,
-  services,
+  requestableDates,
   slotsForDate,
   todayZurich,
   vehicleSizes,
   type FieldErrors,
-  type ServiceId,
+  type Service,
+  type Settings,
   type VehicleSize,
 } from "@/lib/booking";
-import { site } from "@/lib/site";
-import { SELECT_SERVICE_EVENT } from "./SelectServiceLink";
+import { SELECT_SERVICE_EVENT, type SelectServiceDetail } from "./SelectServiceLink";
 
 type Booked = { date: string; time: string };
 type Status = "idle" | "sending" | "done";
 
 const weekday = new Intl.DateTimeFormat("de-CH", { weekday: "short", timeZone: "UTC" });
 const dayMonth = new Intl.DateTimeFormat("de-CH", { day: "numeric", month: "short", timeZone: "UTC" });
-const longDate = new Intl.DateTimeFormat("de-CH", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-  timeZone: "UTC",
-});
+const longDate = new Intl.DateTimeFormat("de-CH", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
 const asDate = (d: string) => new Date(`${d}T12:00:00Z`);
 
 const chip =
@@ -36,10 +30,10 @@ const chipOff = "border-line text-muted hover:border-white/25 hover:text-fg";
 const input =
   "w-full rounded-[var(--radius-input)] border border-white/12 bg-white/[0.04] px-4 py-3 text-fg placeholder:text-zinc-500 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/30";
 
-export function Booking() {
-  const [service, setService] = useState<ServiceId>("komplett");
+export function RequestForm({ services, settings }: { services: Service[]; settings: Settings }) {
+  const [serviceId, setService] = useState<string>(() => (services.find((s) => s.featured) ?? services[0])?.id ?? "");
   const [size, setSize] = useState<VehicleSize>("mittel");
-  const dates = useBookableDates();
+  const dates = useRequestableDates(settings);
   const [pickedDate, setDate] = useState<string>("");
   const date = pickedDate || dates[0] || "";
   const [time, setTime] = useState<string>("");
@@ -50,7 +44,11 @@ export function Booking() {
   const [formError, setFormError] = useState<string>("");
 
   useEffect(() => {
-    const onSelect = (e: Event) => setService((e as CustomEvent<ServiceId>).detail);
+    const onSelect = (e: Event) => {
+      const d = (e as CustomEvent<SelectServiceDetail>).detail;
+      setService(d.service);
+      if (d.size) setSize(d.size);
+    };
     window.addEventListener(SELECT_SERVICE_EVENT, onSelect);
     return () => window.removeEventListener(SELECT_SERVICE_EVENT, onSelect);
   }, []);
@@ -74,14 +72,14 @@ export function Booking() {
 
   const slots = useMemo(() => {
     if (!date) return [];
-    return slotsForDate(date).map((t) => ({
+    return slotsForDate(date, settings).map((t) => ({
       time: t,
       taken: booked?.some((b) => b.date === date && b.time === t) ?? false,
     }));
-  }, [date, booked]);
+  }, [date, booked, settings]);
 
-  const price = estimatePrice(service, size);
-  const selected = services.find((s) => s.id === service)!;
+  const selected = services.find((s) => s.id === serviceId);
+  const price = estimatePrice(selected, size, settings);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -89,7 +87,7 @@ export function Booking() {
     setErrors({});
     const fd = new FormData(e.currentTarget);
     const payload = {
-      service,
+      service: serviceId,
       vehicleSize: size,
       date,
       time,
@@ -113,25 +111,33 @@ export function Booking() {
         return;
       }
       setErrors(json.fields ?? {});
-      setFormError(json.error ?? "Buchung fehlgeschlagen. Bitte versuche es nochmals.");
-      if (res.status === 409) {
-        setTime("");
-        loadSlots();
-      }
+      setFormError(json.error ?? "Anfrage fehlgeschlagen. Bitte versuche es nochmals.");
     } catch {
       setFormError("Keine Verbindung. Bitte prüfe dein Internet und versuche es nochmals.");
     }
     setStatus("idle");
   }
 
+  if (services.length === 0) {
+    return (
+      <div className="glass rounded-[var(--radius-card)] p-8 text-muted">
+        Online-Anfragen sind gerade nicht verfügbar. Schreib uns am besten direkt auf{" "}
+        <a href={settings.instagram} className="text-fg underline underline-offset-2" target="_blank" rel="noreferrer">
+          Instagram
+        </a>
+        .
+      </div>
+    );
+  }
+
   if (status === "done") {
     return (
       <div className="glass flex flex-col items-start rounded-[var(--radius-card)] p-8 md:p-10" role="status">
         <CheckCircle size={44} weight="duotone" className="text-accent" />
-        <h3 className="mt-5 font-display text-3xl font-semibold tracking-tight">Anfrage ist da.</h3>
+        <h3 className="mt-5 font-display text-3xl font-semibold tracking-tight">Danke, Anfrage ist da.</h3>
         <p className="mt-3 max-w-md leading-relaxed text-muted">
-          {selected.name} am {longDate.format(asDate(date))} um {time} Uhr. Du bekommst eine Bestätigung per
-          E-Mail oder Telefon, sobald der Termin fix ist.
+          {selected?.name}, Wunschtermin {longDate.format(asDate(date))} um {time} Uhr. Jeremia meldet sich bei dir,
+          um den Termin zu bestätigen oder eine Alternative vorzuschlagen.
         </p>
         <button
           type="button"
@@ -142,7 +148,7 @@ export function Booking() {
           }}
           className="mt-8 rounded-full border border-line px-5 py-2.5 text-sm text-fg transition hover:bg-white/5"
         >
-          Weiteren Termin buchen
+          Weitere Anfrage
         </button>
       </div>
     );
@@ -157,14 +163,15 @@ export function Booking() {
             <button
               key={s.id}
               type="button"
-              aria-pressed={service === s.id}
+              aria-pressed={serviceId === s.id}
               onClick={() => setService(s.id)}
-              className={`${chip} ${service === s.id ? chipOn : chipOff}`}
+              className={`${chip} ${serviceId === s.id ? chipOn : chipOff}`}
             >
               {s.name}
             </button>
           ))}
         </div>
+        {errors.service && <p className="mt-2 text-sm text-red-400">{errors.service}</p>}
       </fieldset>
 
       <fieldset className="mt-7">
@@ -188,7 +195,7 @@ export function Booking() {
       </fieldset>
 
       <fieldset className="mt-7">
-        <legend className="text-sm font-medium text-fg">Tag</legend>
+        <legend className="text-sm font-medium text-fg">Wunschtag</legend>
         <div className="-mx-1 mt-3 flex snap-x gap-2 overflow-x-auto px-1 pb-2 [scrollbar-width:thin]">
           {dates.length === 0
             ? Array.from({ length: 7 }).map((_, i) => (
@@ -219,7 +226,7 @@ export function Booking() {
       </fieldset>
 
       <fieldset className="mt-5">
-        <legend className="text-sm font-medium text-fg">Uhrzeit</legend>
+        <legend className="text-sm font-medium text-fg">Wunschzeit</legend>
         <div className="mt-3 flex flex-wrap gap-2">
           {booked === null
             ? Array.from({ length: 4 }).map((_, i) => (
@@ -232,6 +239,7 @@ export function Booking() {
                   disabled={s.taken}
                   aria-pressed={time === s.time}
                   onClick={() => setTime(s.time)}
+                  title={s.taken ? "Bereits vergeben" : undefined}
                   className={`${chip} ${
                     s.taken
                       ? "cursor-not-allowed border-line text-zinc-600 line-through"
@@ -246,7 +254,7 @@ export function Booking() {
         </div>
         {slotsError && (
           <p className="mt-2 text-sm text-muted">
-            Belegte Zeiten konnten nicht geladen werden.{" "}
+            Vergebene Zeiten konnten nicht geladen werden.{" "}
             <button type="button" onClick={loadSlots} className="underline underline-offset-2 hover:text-fg">
               Nochmals laden
             </button>
@@ -269,58 +277,54 @@ export function Booking() {
             name="notes"
             rows={3}
             maxLength={1000}
-            placeholder="Hundehaare, Kratzer an der Tür, Abholung gewünscht ..."
+            placeholder="Hundehaare, Kratzer an der Tür, Scheinwerfer matt ..."
             className={`${input} resize-none`}
           />
         </div>
       </div>
 
       {formError && (
-        <p className="mt-6 flex items-start gap-2 rounded-[var(--radius-input)] border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300" role="alert">
+        <p
+          className="mt-6 flex items-start gap-2 rounded-[var(--radius-input)] border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+          role="alert"
+        >
           <WarningCircle size={18} className="mt-0.5 shrink-0" />
-          <span>
-            {formError}
-            {formError.includes("Instagram") && (
-              <>
-                {" "}
-                <a href={site.instagram} className="underline underline-offset-2" target="_blank" rel="noreferrer">
-                  {site.instagramHandle}
-                </a>
-              </>
-            )}
-          </span>
+          <span>{formError}</span>
         </p>
       )}
 
       <div className="mt-8 flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted">
           Richtpreis <span className="font-display text-xl font-semibold text-fg">CHF {price}</span>
-          <span className="block">Endpreis je nach Zustand des Fahrzeugs.</span>
+          <span className="block">Unverbindlich. Termin wird von Jeremia bestätigt.</span>
         </p>
         <button
           type="submit"
           disabled={status === "sending" || !time}
           className="rounded-full bg-accent px-8 py-3.5 font-medium text-white transition hover:bg-accent-strong active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {status === "sending" ? "Wird gesendet ..." : "Termin buchen"}
+          {status === "sending" ? "Wird gesendet ..." : "Anfrage senden"}
         </button>
       </div>
     </form>
   );
 }
 
-// Die Datumsliste hängt vom heutigen Tag ab. Auf dem Server (statisch gerendert) ist sie leer,
+// Die Datumsliste hängt vom heutigen Tag ab. Auf dem Server ist sie leer,
 // im Browser wird sie berechnet. So gibt es keinen Hydration-Mismatch.
 const EMPTY: string[] = [];
 let cachedDates: { key: string; value: string[] } | null = null;
-function getDatesSnapshot() {
-  const key = todayZurich();
-  if (cachedDates?.key !== key) cachedDates = { key, value: bookableDates() };
-  return cachedDates.value;
-}
 const noopSubscribe = () => () => {};
-function useBookableDates() {
-  return useSyncExternalStore(noopSubscribe, getDatesSnapshot, () => EMPTY);
+function useRequestableDates(settings: Settings) {
+  const key = `${todayZurich()}|${settings.weekdaySlots.join()}|${settings.saturdaySlots.join()}`;
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => {
+      if (cachedDates?.key !== key) cachedDates = { key, value: requestableDates(settings) };
+      return cachedDates.value;
+    },
+    () => EMPTY,
+  );
 }
 
 function Field({

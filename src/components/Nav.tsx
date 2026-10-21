@@ -6,8 +6,9 @@ import { List, X } from "@phosphor-icons/react";
 
 const links = [
   { href: "#leistungen", label: "Leistungen" },
-  { href: "#ergebnis", label: "Ergebnis" },
-  { href: "#pakete", label: "Pakete" },
+  { href: "#showroom", label: "3D-Ansicht" },
+  { href: "#pakete", label: "Preise" },
+  { href: "#ueber", label: "Über Jeremia" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -31,7 +32,7 @@ export function Nav() {
           </span>
         </a>
 
-        <ul className="hidden items-center gap-8 text-sm text-muted md:flex">
+        <ul className="hidden items-center gap-7 text-sm text-muted lg:flex">
           {links.map((l) => (
             <li key={l.href}>
               <a href={l.href} className="transition-colors hover:text-fg">
@@ -43,15 +44,15 @@ export function Nav() {
 
         <div className="flex items-center gap-2">
           <a
-            href="#termin"
+            href="#anfrage"
             className="hidden rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white transition hover:bg-accent-strong active:scale-[0.98] sm:inline-block"
           >
-            Termin buchen
+            Anfrage senden
           </a>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="grid size-11 place-items-center rounded-full text-fg md:hidden"
+            className="grid size-11 place-items-center rounded-full text-fg lg:hidden"
             aria-label={open ? "Menü schliessen" : "Menü öffnen"}
             aria-expanded={open}
           >
@@ -61,7 +62,7 @@ export function Nav() {
       </nav>
 
       {open && (
-        <div className="glass mx-auto mt-2 max-w-6xl rounded-[var(--radius-card)] p-2 md:hidden">
+        <div className="glass mx-auto mt-2 max-w-6xl rounded-[var(--radius-card)] p-2 lg:hidden">
           <ul className="flex flex-col">
             {links.map((l) => (
               <li key={l.href}>
@@ -76,11 +77,11 @@ export function Nav() {
             ))}
             <li className="p-2">
               <a
-                href="#termin"
+                href="#anfrage"
                 onClick={() => setOpen(false)}
                 className="block rounded-full bg-accent px-5 py-3 text-center font-medium text-white"
               >
-                Termin buchen
+                Anfrage senden
               </a>
             </li>
           </ul>

@@ -14,12 +14,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "jj.detailing01 | Professionelle Fahrzeugaufbereitung",
+  title: "jj.detailing01 | Autoaufbereitung in Frauenfeld",
   description:
-    "Handwäsche, Innenraumpflege, Politur und Keramikversiegelung. Termin online buchen bei jj.detailing01.",
+    "Autoaufbereitung von Hand in Frauenfeld TG: Handwäsche, Innenraum, Politur und Keramikversiegelung. Jetzt online anfragen bei Jeremia von jj.detailing01.",
   openGraph: {
     title: "jj.detailing01 | Professional Auto Care",
-    description: "Fahrzeugaufbereitung mit Handarbeit. Termin online buchen.",
+    description: "Autoaufbereitung von Hand in Frauenfeld. Online anfragen.",
     images: ["/images/hero.png"],
     locale: "de_CH",
     type: "website",

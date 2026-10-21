@@ -1,25 +1,28 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { ServiceId } from "@/lib/booking";
+import type { VehicleSize } from "@/lib/booking";
 
 export const SELECT_SERVICE_EVENT = "jj:select-service";
+export type SelectServiceDetail = { service: string; size?: VehicleSize };
 
-// Wählt das Paket im Buchungsformular vor und springt dorthin.
+// Wählt das Paket im Anfrageformular vor und springt dorthin.
 export function SelectServiceLink({
   service,
   className,
   children,
 }: {
-  service: ServiceId;
+  service: string;
   className?: string;
   children: ReactNode;
 }) {
   return (
     <a
-      href="#termin"
+      href="#anfrage"
       className={className}
-      onClick={() => window.dispatchEvent(new CustomEvent(SELECT_SERVICE_EVENT, { detail: service }))}
+      onClick={() =>
+        window.dispatchEvent(new CustomEvent<SelectServiceDetail>(SELECT_SERVICE_EVENT, { detail: { service } }))
+      }
     >
       {children}
     </a>

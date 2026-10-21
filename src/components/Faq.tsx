@@ -19,6 +19,14 @@ const faqs = [
     a: "Am besten ja, vor allem für die Innenraumpflege. Persönliche Sachen legen wir sonst in eine Box und geben sie dir bei der Abholung zurück.",
   },
   {
+    q: "Ist mein Termin nach der Anfrage fix?",
+    a: "Noch nicht. Jeremia prüft jede Anfrage und meldet sich bei dir, um den Termin zu bestätigen oder eine andere Zeit vorzuschlagen.",
+  },
+  {
+    q: "Wo ist jj.detailing01?",
+    a: "In Frauenfeld im Thurgau. Die genaue Adresse bekommst du mit der Terminbestätigung.",
+  },
+  {
     q: "Kann ich einen Termin verschieben?",
     a: "Klar. Melde dich bis 24 Stunden vorher, dann finden wir einen neuen Termin.",
   },

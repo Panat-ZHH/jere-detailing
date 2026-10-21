@@ -7,9 +7,9 @@ export const metadata: Metadata = { title: "Datenschutz | jj.detailing01" };
 export default function Datenschutz() {
   return (
     <LegalPage title="Datenschutz">
-      <h2>Terminbuchung</h2>
+      <h2>Terminanfragen</h2>
       <p>
-        Wenn du online einen Termin buchst, speichern wir Name, E-Mail, Telefonnummer, Fahrzeug, gewähltes Paket,
+        Wenn du online eine Anfrage sendest, speichern wir Name, E-Mail, Telefonnummer, Fahrzeug, gewähltes Paket,
         Termin und deine Bemerkungen. Wir nutzen diese Angaben nur, um den Termin zu bestätigen und durchzuführen.
       </p>
       <h2>Speicherort</h2>
